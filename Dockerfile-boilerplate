@@ -1,0 +1,31 @@
+# Debian based image that is able to run an a self-contained Java app
+FROM debian:latest
+MAINTAINER Concrete Java Chapter
+
+#install oracle jdk
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true |  /usr/bin/debconf-set-selections
+
+RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee /etc/apt/sources.list.d/webupd8team-java.list
+
+RUN echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list
+
+RUN apt-get update -y
+
+RUN apt-get install -my gnupg
+
+RUN apt-get install -y unzip
+
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886
+
+RUN apt-get install -y oracle-java8-installer --allow-unauthenticated
+
+RUN apt-get install -y oracle-java8-set-default
+
+# Adding JAR File
+COPY example.jar /path/to/upload
+
+# Exppose port where app will be running
+# EXPOSE <Port Number>
+
+# Command to execute application
+# ENTRYPOINT ["/bin/bash", "-c", "java -jar /path/to/upload/example.jar"]
